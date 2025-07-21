@@ -64,3 +64,18 @@ export async function scheduleWeeklyNotification({
 
   console.log("Notification scheduled:", notification);
 }
+
+export async function cancelWeeklyNotification(weekday: number) {
+  const scheduledNotifications =
+    await Notifications.getAllScheduledNotificationsAsync();
+
+  for (const notification of scheduledNotifications) {
+    const trigger = notification.trigger as { weekday: number };
+    if (trigger.weekday === weekday + 1) {
+      await Notifications.cancelScheduledNotificationAsync(
+        notification.identifier
+      );
+      console.log("Cancelled notification for weekday:", weekday);
+    }
+  }
+}

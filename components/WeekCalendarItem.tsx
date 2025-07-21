@@ -5,9 +5,18 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { subMinutes } from "date-fns";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-import { scheduleWeeklyNotification } from "@/lib/local-notifications";
+import {
+  cancelWeeklyNotification,
+  scheduleWeeklyNotification,
+} from "@/lib/local-notifications";
 
 export default function WeekCalendarItem({
   day,
@@ -47,6 +56,29 @@ export default function WeekCalendarItem({
     }
   };
 
+  const handleLongPress = () => {
+    if (!selectedTime) return;
+
+    Alert.alert(
+      "Remove Reminder",
+      `Are you sure you want to remove the reminder for ${day}?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: async () => {
+            await cancelWeeklyNotification(index);
+            setSelectedTime(null);
+          },
+        },
+      ]
+    );
+  };
+
   const openTimePicker = () => {
     setShowPicker(true);
   };
@@ -66,6 +98,7 @@ export default function WeekCalendarItem({
     >
       <TouchableOpacity
         onPress={openTimePicker}
+        onLongPress={handleLongPress}
         className="flex-row items-center justify-between p-4"
       >
         <Text className="text-sm font-medium text-gray-600">{day}</Text>
