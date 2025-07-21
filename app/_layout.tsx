@@ -44,7 +44,7 @@ export default function Layout() {
       }}
     >
       <Tabs.Screen
-        name="timeline"
+        name="index"
         options={{
           title: "Timeline",
           tabBarIcon: ({ color, size }) => (
