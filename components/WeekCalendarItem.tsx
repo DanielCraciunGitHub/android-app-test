@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { WORKOUT_REMINDER_TIME } from "@/config";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { subMinutes } from "date-fns";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 
-import { scheduleNotification } from "@/lib/local-notifications";
+import { scheduleWeeklyNotification } from "@/lib/local-notifications";
 
 export default function WeekCalendarItem({
   day,
@@ -37,10 +39,10 @@ export default function WeekCalendarItem({
       nextOccurrence.setMinutes(date.getMinutes());
       nextOccurrence.setSeconds(0);
 
-      await scheduleNotification({
-        title: `Gym Time - ${day}`,
-        message: `Time for your workout!`,
-        date: nextOccurrence,
+      await scheduleWeeklyNotification({
+        title: `Gym Time 🏋️`,
+        message: `You have ${WORKOUT_REMINDER_TIME} minutes to get to the gym!`,
+        date: subMinutes(nextOccurrence, WORKOUT_REMINDER_TIME),
       });
     }
   };

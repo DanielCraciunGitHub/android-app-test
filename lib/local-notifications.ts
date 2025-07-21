@@ -26,7 +26,7 @@ export async function requestNotificationPermissions() {
   return true;
 }
 
-export async function scheduleNotification({
+export async function scheduleWeeklyNotification({
   title,
   message,
   date,

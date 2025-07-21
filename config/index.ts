@@ -1,0 +1,1 @@
+export const WORKOUT_REMINDER_TIME = 30;
