@@ -1,35 +1,21 @@
-import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useFonts } from "expo-font";
-import { Tabs } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { View } from "react-native";
 
-import "../global.css";
+// Create a bottom tab navigator
+const Tab = createBottomTabNavigator();
 
-SplashScreen.preventAutoHideAsync();
+// Placeholder screen components
+const PlaceholderScreen = () => <View />;
 
-export default function Layout() {
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+export default function Footer() {
   return (
-    <Tabs
+    <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#FFFFFF",
-          borderTopWidth: 1,
-          borderTopColor: "#E5E5E5",
+          backgroundColor: "#000000",
+          borderTopWidth: 0,
+          borderTopColor: "#000000",
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
@@ -39,33 +25,33 @@ export default function Layout() {
         headerShown: false,
       }}
     >
-      <Tabs.Screen
+      <Tab.Screen
         name="index"
+        component={PlaceholderScreen}
         options={{
-          title: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
         }}
       />
-      <Tabs.Screen
+      <Tab.Screen
         name="workouts"
+        component={PlaceholderScreen}
         options={{
-          title: "Workouts",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="barbell-outline" size={size} color={color} />
           ),
         }}
       />
-      <Tabs.Screen
+      <Tab.Screen
         name="profile"
+        component={PlaceholderScreen}
         options={{
-          title: "Profile",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
       />
-    </Tabs>
+    </Tab.Navigator>
   );
 }
