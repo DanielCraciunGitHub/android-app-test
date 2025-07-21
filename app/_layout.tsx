@@ -3,12 +3,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { Tabs } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { useColorScheme } from "nativewind";
 
 import "../global.css";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
+  const { colorScheme } = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -27,15 +29,17 @@ export default function Layout() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#FFFFFF",
+          backgroundColor: colorScheme === "dark" ? "#000000" : "#FFFFFF",
           borderTopWidth: 1,
-          borderTopColor: "#E5E5E5",
+          borderTopColor: colorScheme === "dark" ? "#1F2937" : "#E5E5E5",
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
         },
-        tabBarActiveTintColor: "#023c69",
-        tabBarInactiveTintColor: "#9CA3AF",
+        tabBarActiveTintColor:
+          colorScheme === "dark" ? "#FFFFFF" : "#023c69",
+        tabBarInactiveTintColor:
+          colorScheme === "dark" ? "#9CA3AF" : "#6B7280",
         headerShown: false,
       }}
     >
