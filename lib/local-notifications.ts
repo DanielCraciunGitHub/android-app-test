@@ -3,8 +3,8 @@ import { Platform } from "react-native";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldPlaySound: false,
-    shouldSetBadge: false,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
     shouldShowBanner: true,
     shouldShowList: true,
   }),
@@ -37,19 +37,30 @@ export async function scheduleNotification({
     return;
   }
 
+  if (!date) {
+    throw new Error(
+      "Date is required for scheduling weekly notifications"
+    );
+  }
+
   const notificationContent: Notifications.NotificationContentInput = {
     title: title,
     body: message,
-    priority: Notifications.AndroidNotificationPriority.MAX,
+    priority: Notifications.AndroidNotificationPriority.HIGH,
     vibrate: [250, 250],
     sound: true,
   };
 
-  await Notifications.scheduleNotificationAsync({
+  console.log("Scheduling notification for:", date);
+  const notification = await Notifications.scheduleNotificationAsync({
     content: notificationContent,
     trigger: {
-      date: date || new Date(),
-      type: Notifications.SchedulableTriggerInputTypes.DATE,
+      weekday: date.getDay() + 1,
+      hour: date.getHours(),
+      minute: date.getMinutes(),
+      type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
     },
   });
+
+  console.log("Notification scheduled:", notification);
 }
