@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { WORKOUT_REMINDER_TIME } from "@/config";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -13,6 +12,7 @@ import {
   View,
 } from "react-native";
 
+import { getSettings } from "@/config/settings";
 import {
   cancelWeeklyNotification,
   scheduleWeeklyNotification,
@@ -27,6 +27,15 @@ export default function WeekCalendarItem({
 }) {
   const [showPicker, setShowPicker] = useState(false);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  const [reminderTime, setReminderTime] = useState(30);
+
+  useEffect(() => {
+    const loadReminderTime = async () => {
+      const settings = await getSettings();
+      setReminderTime(settings.workoutReminderTime);
+    };
+    loadReminderTime();
+  }, []);
 
   const handleTimeChange = async (
     event: DateTimePickerEvent,
@@ -50,8 +59,8 @@ export default function WeekCalendarItem({
 
       await scheduleWeeklyNotification({
         title: `Gym Time 🏋️`,
-        message: `You have ${WORKOUT_REMINDER_TIME} minutes to get to the gym!`,
-        date: subMinutes(nextOccurrence, WORKOUT_REMINDER_TIME),
+        message: `You have ${reminderTime} minutes to get to the gym!`,
+        date: subMinutes(nextOccurrence, reminderTime),
       });
     }
   };
