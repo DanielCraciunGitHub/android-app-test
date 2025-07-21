@@ -44,23 +44,16 @@ export default function Layout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="timeline"
         options={{
+          title: "Timeline",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
+            <Ionicons name="time-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="reminders"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="workouts"
+        name="create-workout"
         options={{
           title: "Workouts",
           tabBarIcon: ({ color, size }) => (
@@ -69,11 +62,11 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="reminders"
         options={{
-          title: "Profile",
+          title: "Reminders",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
+            <Ionicons name="calendar-outline" size={size} color={color} />
           ),
         }}
       />
