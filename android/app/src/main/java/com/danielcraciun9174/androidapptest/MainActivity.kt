@@ -1,4 +1,4 @@
-package com.danielcraciun9174.androidapptest
+package com.danielcraciun9174.gymtime
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

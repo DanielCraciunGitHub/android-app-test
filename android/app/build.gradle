@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.danielcraciun9174.androidapptest'
+    namespace 'com.danielcraciun9174.gymtime'
     defaultConfig {
-        applicationId 'com.danielcraciun9174.androidapptest'
+        applicationId 'com.danielcraciun9174.gymtime'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

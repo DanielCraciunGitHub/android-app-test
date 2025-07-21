@@ -24,8 +24,8 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="androidapptest"/>
-        <data android:scheme="exp+android-app-test"/>
+        <data android:scheme="gym-time"/>
+        <data android:scheme="exp+gym-time"/>
       </intent-filter>
     </activity>
   </application>
