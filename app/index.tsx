@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { Button, Text, View } from "react-native";
-import { requestNotificationPermissions, showNotification } from "../components/Notifications";
+
+import {
+  requestNotificationPermissions,
+  showNotification,
+} from "../components/Notifications";
 
 export default function Index() {
   useEffect(() => {
@@ -41,18 +45,20 @@ export default function Index() {
         gap: 10,
       }}
     >
-      <Text style={{ marginBottom: 20 }}>Test different types of notifications:</Text>
-      
+      <Text style={{ marginBottom: 20 }}>
+        Test different types of notifications:
+      </Text>
+
       <Button
         title="Show Success Notification"
         onPress={showSuccessNotification}
       />
-      
+
       <Button
         title="Show Error Notification"
         onPress={showErrorNotification}
       />
-      
+
       <Button
         title="Show Info Notification"
         onPress={showInfoNotification}

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "android-app-test",
-    "slug": "android-app-test",
+    "name": "gymtime",
+    "slug": "gymtime",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "androidapptest",
+    "scheme": "gymtime",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -17,7 +17,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.danielcraciun9174.androidapptest"
+      "package": "com.danielcraciun9174.gymtime"
     },
     "web": {
       "bundler": "metro",
