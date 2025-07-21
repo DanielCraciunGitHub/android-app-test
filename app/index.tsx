@@ -2,7 +2,7 @@ import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Alert, Button, Text, View } from "react-native";
 
-import { scheduleNotification } from "@/components/Notifications";
+import { scheduleNotification } from "@/lib/local-notifications";
 
 export default function Home() {
   const [date, setDate] = useState(new Date());
@@ -61,7 +61,6 @@ export default function Home() {
           scheduleNotification({
             title: "Workout Reminder",
             message: `Time to workout! Your scheduled workout is now.`,
-            type: "info",
             date: date,
           })
             .then(() => {
