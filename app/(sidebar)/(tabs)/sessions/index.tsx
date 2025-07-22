@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import { router } from "expo-router";
 import { Alert, ScrollView, Text, View } from "react-native";
 
 import { WorkoutSession } from "@/types/play";
-import { getItem, setItem, StorageKey } from "@/lib/local-storage";
+import { getItem, StorageKey } from "@/lib/local-storage";
 import { WorkoutSessionCard } from "@/components/WorkoutSessionCard";
 
 export default function WorkoutSessions() {
@@ -19,7 +20,6 @@ export default function WorkoutSessions() {
         StorageKey.WORKOUT_SESSIONS
       );
 
-      // Sort sessions by date (most recent first)
       const sortedSessions = (storedSessions || []).sort((a, b) => {
         const dateA = a.date instanceof Date ? a.date : new Date(a.date);
         const dateB = b.date instanceof Date ? b.date : new Date(b.date);
@@ -41,37 +41,8 @@ export default function WorkoutSessions() {
     }, [])
   );
 
-  const handleDeleteSession = async (session: WorkoutSession) => {
-    Alert.alert(
-      "Delete Workout Session",
-      "Are you sure you want to delete this workout session?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              const updatedSessions = workoutSessions.filter(
-                (s) => s.id !== session.id
-              );
-
-              await setItem(StorageKey.WORKOUT_SESSIONS, updatedSessions);
-
-              setWorkoutSessions(updatedSessions);
-            } catch (error) {
-              console.error("Error deleting workout session:", error);
-              Alert.alert("Error", "Failed to delete workout session");
-            }
-          },
-        },
-      ]
-    );
-  };
-
   const handleSessionPress = (session: WorkoutSession) => {
-    // TODO: Navigate to session details or implement other actions
-    console.log("Session pressed:", session);
+    router.push(`/sessions/${session.id}`);
   };
 
   const getTotalExercises = () => {
@@ -138,7 +109,6 @@ export default function WorkoutSessions() {
             key={session.id}
             session={session}
             onPress={handleSessionPress}
-            onDelete={handleDeleteSession}
           />
         ))}
       </ScrollView>

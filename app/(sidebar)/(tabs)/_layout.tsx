@@ -47,7 +47,7 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="workout-sessions"
+        name="sessions"
         options={{
           title: "Sessions",
           tabBarIcon: ({ color, size }) => (

@@ -147,7 +147,7 @@ export default function WorkoutPlayer({
         "Complete workout session saved:",
         JSON.stringify(completeWorkoutSession, null, 2)
       );
-      router.push("/(sidebar)/(tabs)/workout-sessions");
+      router.push("/(sidebar)/(tabs)/sessions");
     }
   };
 
