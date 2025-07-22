@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import uuid from "react-native-uuid";
 
 export interface ExerciseDetails {
@@ -8,6 +14,10 @@ export interface ExerciseDetails {
   targetSets: string;
   targetReps: string;
   targetRestTime: string;
+  weight: {
+    value: string;
+    unit: "kg" | "lbs";
+  };
   selected: boolean;
   selectionOrder?: number; // Track the order in which exercises were selected
 }
@@ -37,6 +47,10 @@ const defaultValues: ExerciseDetails = {
   targetSets: "",
   targetReps: "",
   targetRestTime: "",
+  weight: {
+    value: "",
+    unit: "kg",
+  },
   selected: false,
   selectionOrder: undefined,
 };
@@ -56,19 +70,25 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       field: "name" as keyof ExerciseDetails,
     },
     {
-      label: "Target Sets (adaptable)",
+      label: "Weight",
+      placeholder: "Enter weight",
+      keyboardType: "numeric" as const,
+      field: "weight" as keyof ExerciseDetails,
+    },
+    {
+      label: "Sets",
       placeholder: "Enter number of sets",
       keyboardType: "numeric" as const,
       field: "targetSets" as keyof ExerciseDetails,
     },
     {
-      label: "Target Reps (fixed)",
+      label: "Reps",
       placeholder: "Enter number of reps",
       keyboardType: "numeric" as const,
       field: "targetReps" as keyof ExerciseDetails,
     },
     {
-      label: "Target Rest Time (adaptable)",
+      label: "Rest Time",
       placeholder: "Enter rest time in seconds",
       keyboardType: "numeric" as const,
       field: "targetRestTime" as keyof ExerciseDetails,
@@ -98,11 +118,21 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
 
   const handleInputChange = (text: string) => {
     const field = steps[currentStep].field;
-    setDetails({ ...details, [field]: text });
+    if (field === "weight") {
+      setDetails({
+        ...details,
+        weight: { ...details.weight, value: text },
+      });
+    } else {
+      setDetails({ ...details, [field]: text });
+    }
   };
 
   const currentStepData = steps[currentStep];
-  const currentValue = details[currentStepData.field] as string;
+  const currentValue =
+    currentStepData.field === "weight"
+      ? details.weight.value
+      : (details[currentStepData.field] as string);
 
   return (
     <View className="w-full flex-1 bg-white dark:bg-black">
@@ -194,6 +224,56 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
             }
             submitBehavior="submit"
           />
+          {currentStepData.field === "weight" && (
+            <View className="mt-4 flex-row items-center justify-center gap-4">
+              <Pressable
+                onPress={() =>
+                  setDetails({
+                    ...details,
+                    weight: { ...details.weight, unit: "kg" },
+                  })
+                }
+                className={`rounded-lg px-6 py-3 ${
+                  details.weight.unit === "kg"
+                    ? "bg-blue-500"
+                    : "bg-gray-200 dark:bg-gray-700"
+                }`}
+              >
+                <Text
+                  className={`text-center font-medium ${
+                    details.weight.unit === "kg"
+                      ? "text-white"
+                      : "text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  kg
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() =>
+                  setDetails({
+                    ...details,
+                    weight: { ...details.weight, unit: "lbs" },
+                  })
+                }
+                className={`rounded-lg px-6 py-3 ${
+                  details.weight.unit === "lbs"
+                    ? "bg-blue-500"
+                    : "bg-gray-200 dark:bg-gray-700"
+                }`}
+              >
+                <Text
+                  className={`text-center font-medium ${
+                    details.weight.unit === "lbs"
+                      ? "text-white"
+                      : "text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  lbs
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </View>
       </View>
     </View>

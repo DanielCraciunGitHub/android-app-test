@@ -98,13 +98,18 @@ export default function MyExercises() {
 
   if (exercises.length === 0) {
     return (
-      <View className="flex-1 items-center justify-center bg-white dark:bg-black">
+      <View className="flex-1 items-center justify-center gap-4 bg-white dark:bg-black">
         <Text className="text-xl font-bold text-gray-800 dark:text-white">
           No Exercises Yet
         </Text>
         <Text className="mt-2 text-center text-gray-600 dark:text-gray-300">
           Create your first exercise to get started!
         </Text>
+        <Link href="/exercises/add-exercise" asChild>
+          <Pressable className="h-16 w-16 items-center justify-center rounded-full bg-blue-500">
+            <Text className="text-3xl font-bold text-white">+</Text>
+          </Pressable>
+        </Link>
       </View>
     );
   }

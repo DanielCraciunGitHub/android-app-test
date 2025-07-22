@@ -13,6 +13,8 @@ export default function Workouts() {
       StorageKey.EXERCISES
     );
 
+    console.log(details);
+
     if (exercises) {
       exercises.push(details);
       setItem(StorageKey.EXERCISES, exercises);
