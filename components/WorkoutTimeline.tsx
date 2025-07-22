@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
+import { Link } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 
 import { getItem, StorageKey } from "@/lib/local-storage";
@@ -260,9 +261,11 @@ export const WorkoutTimeline: React.FC = () => {
         <Text className="text-2xl font-bold text-gray-800 dark:text-white">
           Today&apos;s Workout
         </Text>
-        <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
-          <Ionicons name="play" size={24} color="#FFFFFF" />
-        </View>
+        <Link href="/play">
+          <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
+            <Ionicons name="play" size={24} color="#FFFFFF" />
+          </View>
+        </Link>
       </View>
 
       <ScrollView className="flex-1 px-6 py-6">

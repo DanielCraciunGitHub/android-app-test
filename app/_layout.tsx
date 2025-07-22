@@ -71,6 +71,14 @@ export default function Layout() {
             ),
           }}
         />
+        <Drawer.Screen
+          name="play/index"
+          options={{
+            drawerItemStyle: {
+              display: "none",
+            },
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );
