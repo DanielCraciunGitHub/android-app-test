@@ -6,7 +6,7 @@ export default function SessionsLayout() {
       <Stack.Screen name="index" options={{ title: "Sessions" }} />
       <Stack.Screen
         name="[id]"
-        options={{ title: "Session", presentation: "formSheet" }}
+        options={{ title: "Session", presentation: "modal" }}
       />
     </Stack>
   );
