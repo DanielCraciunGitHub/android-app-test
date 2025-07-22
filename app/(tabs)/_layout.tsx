@@ -21,7 +21,7 @@ export default function Layout() {
           colorScheme === "dark" ? "#FFFFFF" : "#023c69",
         tabBarInactiveTintColor:
           colorScheme === "dark" ? "#9CA3AF" : "#6B7280",
-        headerShown: true,
+        headerShown: false,
         headerStyle: {
           backgroundColor: colorScheme === "dark" ? "#000000" : "#FFFFFF",
         },
@@ -47,9 +47,9 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="create-exercise"
+        name="add-exercise"
         options={{
-          title: "Create Exercise",
+          title: "Add Exercise",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="barbell-outline" size={size} color={color} />
           ),

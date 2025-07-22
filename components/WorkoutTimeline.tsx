@@ -256,18 +256,15 @@ export const WorkoutTimeline: React.FC = () => {
 
   return (
     <View className="flex-1 bg-white dark:bg-black">
-      {/* Header */}
-      <View className="border-b border-gray-200 bg-white px-6 py-4 dark:border-gray-700 dark:bg-black">
+      <View className="flex-row items-center justify-between px-6 pb-4 pt-6">
         <Text className="text-2xl font-bold text-gray-800 dark:text-white">
-          Workout Timeline
+          Today&apos;s Workout
         </Text>
-        <Text className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-          {selectedExercises.length} exercise
-          {selectedExercises.length !== 1 ? "s" : ""} selected
-        </Text>
+        <View className="h-12 w-12 items-center justify-center rounded-full bg-blue-500 shadow-lg">
+          <Ionicons name="play" size={24} color="#FFFFFF" />
+        </View>
       </View>
 
-      {/* Timeline */}
       <ScrollView className="flex-1 px-6 py-6">
         {selectedExercises.map((exercise, index) => (
           <ExerciseTimeline
@@ -277,7 +274,6 @@ export const WorkoutTimeline: React.FC = () => {
           />
         ))}
 
-        {/* Workout Complete */}
         <View className="mb-12 flex-row">
           <View className="mr-4 items-center">
             <View className="h-12 w-12 items-center justify-center rounded-full bg-emerald-500">
