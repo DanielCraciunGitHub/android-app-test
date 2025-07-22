@@ -38,7 +38,16 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="create-workout"
+        name="my-exercises"
+        options={{
+          title: "My Exercises",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="body-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="create-exercise"
         options={{
           title: "Create Exercise",
           tabBarIcon: ({ color, size }) => (
@@ -52,15 +61,6 @@ export default function Layout() {
           title: "Reminders",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
           ),
         }}
       />

@@ -59,11 +59,15 @@ export default function Layout() {
           }}
         />
         <Drawer.Screen
-          name="my-exercises"
+          name="settings"
           options={{
-            drawerLabel: "My Exercises",
+            drawerLabel: "Settings",
             drawerIcon: ({ color, size }) => (
-              <Ionicons name="body-outline" size={size} color={color} />
+              <Ionicons
+                name="settings-outline"
+                size={size}
+                color={color}
+              />
             ),
           }}
         />
