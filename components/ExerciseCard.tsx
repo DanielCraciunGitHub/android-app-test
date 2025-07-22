@@ -96,7 +96,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
         <View className="flex-row justify-between">
           <Text className="font-medium text-gray-600 dark:text-gray-300">
-            Target Sets:
+            Sets:
           </Text>
           <Text className="text-gray-800 dark:text-white">
             {exercise.targetSets || "Not set"}
@@ -105,7 +105,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
         <View className="flex-row justify-between">
           <Text className="font-medium text-gray-600 dark:text-gray-300">
-            Target Reps:
+            Reps:
           </Text>
           <Text className="text-gray-800 dark:text-white">
             {exercise.targetReps || "Not set"}
@@ -114,7 +114,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
         <View className="flex-row justify-between">
           <Text className="font-medium text-gray-600 dark:text-gray-300">
-            Rest Time:
+            Rest:
           </Text>
           <Text className="text-gray-800 dark:text-white">
             {exercise.targetRestTime
