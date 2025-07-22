@@ -64,9 +64,9 @@ export default function WorkoutPlayer({
     setCurrentSetIndex(0);
     setCurrentExerciseIndex(0);
     setQuickLog(false);
-    setCompletedExercises([]); // Reset completed exercises for new workout
-    setActualReps([]); // Reset actual reps for new workout
-    setExerciseRating(0); // Reset exercise rating for new workout
+    setCompletedExercises([]);
+    setActualReps([]);
+    setExerciseRating(0);
   }, [
     setPrepPhase,
     setPerformSetPhase,
@@ -93,7 +93,6 @@ export default function WorkoutPlayer({
   };
 
   const handleNextExercise = async () => {
-    // Create exercise data for the current exercise
     const currentExerciseData: ExerciseData = {
       id: uuid.v4() as string,
       restTime: Number(currentExercise.targetRestTime),
@@ -105,7 +104,6 @@ export default function WorkoutPlayer({
       })),
     };
 
-    // Add current exercise to completed exercises array
     const updatedCompletedExercises = [
       ...completedExercises,
       currentExerciseData,
@@ -113,18 +111,15 @@ export default function WorkoutPlayer({
     setCompletedExercises(updatedCompletedExercises);
 
     if (currentExerciseIndex < exercises.length - 1) {
-      // Continue to next exercise
       setQuickLog(false);
       setCurrentExerciseIndex(currentExerciseIndex + 1);
       setCurrentSetIndex(0);
       setPrepPhase(true);
       setRestPhase(false);
       setPerformSetPhase(false);
-      // Reset for next exercise
       setActualReps([]);
       setExerciseRating(0);
     } else {
-      // This is the last exercise - save the complete workout session
       const completeWorkoutSession: WorkoutSession = {
         id: uuid.v4() as string,
         date: new Date(),

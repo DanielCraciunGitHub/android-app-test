@@ -66,11 +66,7 @@ export default function WorkoutSessions() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center bg-white dark:bg-black">
-        <Text className="text-lg text-gray-600 dark:text-gray-300">
-          Loading workout sessions...
-        </Text>
-      </View>
+      <View className="flex-1 items-center justify-center bg-white dark:bg-black" />
     );
   }
 

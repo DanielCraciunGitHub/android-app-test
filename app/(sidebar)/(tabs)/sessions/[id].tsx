@@ -12,7 +12,7 @@ import {
 
 import { ExerciseData, WorkoutSession } from "@/types/play";
 import { formatDate, formatTime } from "@/lib/date";
-import { getItem, StorageKey } from "@/lib/local-storage";
+import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 
 export default function SessionDetails() {
   const { id } = useLocalSearchParams();
@@ -34,6 +34,45 @@ export default function SessionDetails() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const deleteSession = async () => {
+    Alert.alert(
+      "Delete Session",
+      "Are you sure you want to delete this workout session? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const storedSessions = await getItem<WorkoutSession[]>(
+                StorageKey.WORKOUT_SESSIONS
+              );
+
+              if (storedSessions) {
+                const updatedSessions = storedSessions.filter(
+                  (s) => s.id !== id
+                );
+                await setItem(
+                  StorageKey.WORKOUT_SESSIONS,
+                  updatedSessions
+                );
+
+                router.back();
+              }
+            } catch (error) {
+              console.error("Error deleting session:", error);
+              Alert.alert("Error", "Failed to delete workout session");
+            }
+          },
+        },
+      ]
+    );
   };
 
   useFocusEffect(
@@ -382,6 +421,19 @@ export default function SessionDetails() {
               </View>
             );
           })}
+        </View>
+
+        {/* Delete Session Button */}
+        <View className="mx-4 mb-8">
+          <TouchableOpacity
+            className="flex-row items-center justify-center rounded-lg bg-red-500 px-6 py-4"
+            onPress={deleteSession}
+          >
+            <Ionicons name="trash" size={20} color="white" />
+            <Text className="ml-2 font-semibold text-white">
+              Delete Session
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
