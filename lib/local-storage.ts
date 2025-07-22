@@ -4,7 +4,7 @@ export enum StorageKey {
   REMINDERS = "@reminders",
   SETTINGS = "@settings",
   EXERCISES = "@exercises",
-  WORKOUT_TIMELINE = "@workout-timeline",
+  WORKOUT_SESSIONS = "@workout-sessions",
 }
 
 export async function setItem<T>(

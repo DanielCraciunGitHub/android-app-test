@@ -10,11 +10,14 @@ import {
 } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import uuid from "react-native-uuid";
 
+import { ExerciseData, WorkoutSession } from "@/types/play";
 import { ISettings } from "@/config/settings";
+import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { usePlayBackground } from "@/hooks/play-background";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { ExerciseDetails } from "@/components/ExerciseInput";
@@ -35,7 +38,7 @@ export default function WorkoutPlayer({
   const [currentExerciseIndex, setCurrentExerciseIndex] = useAtom(
     currentExerciseIndexAtom
   );
-  const [exercisesData, setExercisesData] = useAtom(exercisesDataAtom);
+  const setExercisesData = useSetAtom(exercisesDataAtom);
 
   const [prepPhase, setPrepPhase] = useAtom(prepPhaseAtom);
   const [performSetPhase, setPerformSetPhase] = useAtom(
@@ -46,6 +49,9 @@ export default function WorkoutPlayer({
 
   const [actualReps, setActualReps] = useState<string[]>([]);
   const [exerciseRating, setExerciseRating] = useState<number>(0);
+  const [completedExercises, setCompletedExercises] = useState<
+    ExerciseData[]
+  >([]);
 
   const currentExercise = exercises[currentExerciseIndex];
 
@@ -58,6 +64,9 @@ export default function WorkoutPlayer({
     setCurrentSetIndex(0);
     setCurrentExerciseIndex(0);
     setQuickLog(false);
+    setCompletedExercises([]); // Reset completed exercises for new workout
+    setActualReps([]); // Reset actual reps for new workout
+    setExerciseRating(0); // Reset exercise rating for new workout
   }, [
     setPrepPhase,
     setPerformSetPhase,
@@ -83,30 +92,62 @@ export default function WorkoutPlayer({
     setActualReps(newReps);
   };
 
-  const handleNextExercise = () => {
-    const newExerciseData = {
+  const handleNextExercise = async () => {
+    // Create exercise data for the current exercise
+    const currentExerciseData: ExerciseData = {
+      id: uuid.v4() as string,
+      restTime: Number(currentExercise.targetRestTime),
+      rating: exerciseRating,
+      name: currentExercise.name,
       set: actualReps.map((reps) => ({
         targetReps: Number(currentExercise.targetReps),
         actualReps: Number(reps) || 0,
       })),
-      restTime: Number(currentExercise.targetRestTime),
-      rating: exerciseRating,
     };
 
-    const newExercisesData = [...exercisesData];
-    newExercisesData[currentExerciseIndex] = newExerciseData;
-    setExercisesData(newExercisesData);
+    // Add current exercise to completed exercises array
+    const updatedCompletedExercises = [
+      ...completedExercises,
+      currentExerciseData,
+    ];
+    setCompletedExercises(updatedCompletedExercises);
 
     if (currentExerciseIndex < exercises.length - 1) {
+      // Continue to next exercise
       setQuickLog(false);
       setCurrentExerciseIndex(currentExerciseIndex + 1);
       setCurrentSetIndex(0);
       setPrepPhase(true);
       setRestPhase(false);
       setPerformSetPhase(false);
+      // Reset for next exercise
+      setActualReps([]);
+      setExerciseRating(0);
     } else {
+      // This is the last exercise - save the complete workout session
+      const completeWorkoutSession: WorkoutSession = {
+        id: uuid.v4() as string,
+        date: new Date(),
+        exercises: updatedCompletedExercises,
+      };
+
+      setExercisesData(completeWorkoutSession);
+
+      const workoutSessions = await getItem<WorkoutSession[]>(
+        StorageKey.WORKOUT_SESSIONS
+      );
+      await setItem(
+        StorageKey.WORKOUT_SESSIONS,
+        workoutSessions
+          ? [...workoutSessions, completeWorkoutSession]
+          : [completeWorkoutSession]
+      );
+
+      console.log(
+        "Complete workout session saved:",
+        JSON.stringify(completeWorkoutSession, null, 2)
+      );
       router.push("/(sidebar)/(tabs)/workout-sessions");
-      console.log(JSON.stringify(newExercisesData, null, 2));
     }
   };
 
