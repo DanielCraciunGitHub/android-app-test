@@ -1,4 +1,3 @@
-import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -7,13 +6,11 @@ import { WorkoutSession } from "@/types/play";
 interface WorkoutSessionCardProps {
   session: WorkoutSession;
   onPress?: (session: WorkoutSession) => void;
-  onDelete?: (session: WorkoutSession) => void;
 }
 
 export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
   session,
   onPress,
-  onDelete,
 }) => {
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
@@ -48,25 +45,6 @@ export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
     return (sum / validRatings.length).toFixed(1);
   };
 
-  const getTotalReps = () => {
-    return session.exercises.reduce(
-      (total, exercise) =>
-        total +
-        exercise.set.reduce(
-          (setTotal, set) => setTotal + set.actualReps,
-          0
-        ),
-      0
-    );
-  };
-
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(session);
-    }
-  };
-
-  // Convert date string to Date object if needed
   const sessionDate =
     session.date instanceof Date ? session.date : new Date(session.date);
 
@@ -78,22 +56,10 @@ export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
       {/* Header */}
       <View className="mb-3 flex-row items-center justify-between">
         <View className="flex-1">
-          <Text className="text-lg font-semibold text-gray-800 dark:text-white">
-            Workout Session
-          </Text>
-          <Text className="text-sm text-gray-600 dark:text-gray-300">
+          <Text className="text-lg text-gray-600 dark:text-gray-300">
             {formatDate(sessionDate)} at {formatTime(sessionDate)}
           </Text>
         </View>
-
-        {onDelete && (
-          <TouchableOpacity
-            className="rounded-md bg-red-500 px-3 py-1"
-            onPress={handleDelete}
-          >
-            <Text className="text-sm font-medium text-white">Delete</Text>
-          </TouchableOpacity>
-        )}
       </View>
 
       {/* Session Stats */}
@@ -119,16 +85,6 @@ export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
             {getAverageRating()}/5 avg
           </Text>
         </View>
-      </View>
-
-      {/* Quick Stats */}
-      <View className="mb-3 rounded-lg bg-gray-50 p-2 dark:bg-gray-700">
-        <Text className="text-center text-sm text-gray-600 dark:text-gray-300">
-          Total Reps:{" "}
-          <Text className="font-semibold text-gray-800 dark:text-white">
-            {getTotalReps()}
-          </Text>
-        </Text>
       </View>
 
       {/* Exercise List */}
