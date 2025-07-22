@@ -112,14 +112,14 @@ export default function WeekCalendarItem({
       >
         <Text className="text-sm font-medium text-gray-600">{day}</Text>
         {selectedTime ? (
-          <View className="flex-row items-center space-x-2">
+          <View className="flex-row items-center gap-2">
             <Ionicons name="time-outline" size={18} color="#3B82F6" />
             <Text className="text-sm font-medium text-blue-500">
               {formatTime(selectedTime)}
             </Text>
           </View>
         ) : (
-          <View className="flex-row items-center space-x-2 opacity-50">
+          <View className="flex-row items-center gap-2 opacity-50">
             <Ionicons
               name="add-circle-outline"
               size={18}

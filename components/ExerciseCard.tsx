@@ -75,7 +75,7 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
       </View>
 
       {/* Exercise Details */}
-      <View className="space-y-2">
+      <View className="gap-2">
         <View className="flex-row justify-between">
           <Text className="font-medium text-gray-600 dark:text-gray-300">
             Target Sets:

@@ -132,8 +132,8 @@ export const WorkoutSessionCard: React.FC<WorkoutSessionCardProps> = ({
       </View>
 
       {/* Exercise List */}
-      <View className="space-y-2">
-        {session.exercises.map((exercise, index) => (
+      <View className="gap-2">
+        {session.exercises.map((exercise) => (
           <View
             key={exercise.id}
             className="rounded-md bg-gray-50 p-3 dark:bg-gray-700"

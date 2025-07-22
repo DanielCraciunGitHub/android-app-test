@@ -71,7 +71,7 @@ export default function Settings() {
                   : "bg-gray-200 dark:bg-gray-800"
               }`}
             >
-              <View className="flex-row items-center space-x-1">
+              <View className="flex-row items-center gap-1">
                 <Ionicons
                   name="time-outline"
                   size={16}
@@ -116,7 +116,7 @@ export default function Settings() {
                   : "bg-gray-200 dark:bg-gray-800"
               }`}
             >
-              <View className="flex-row items-center space-x-1">
+              <View className="flex-row items-center gap-1">
                 <Ionicons
                   name="time-outline"
                   size={16}
