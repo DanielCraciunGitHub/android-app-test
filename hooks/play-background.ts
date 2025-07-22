@@ -3,6 +3,7 @@ import {
   isPausedAtom,
   performSetPhaseAtom,
   prepPhaseAtom,
+  quickLogAtom,
   restPhaseAtom,
 } from "@/atoms/play";
 import { useAtomValue } from "jotai";
@@ -12,7 +13,7 @@ export const usePlayBackground = () => {
   const performSetPhase = useAtomValue(performSetPhaseAtom);
   const restPhase = useAtomValue(restPhaseAtom);
   const isPaused = useAtomValue(isPausedAtom);
-
+  const quickLog = useAtomValue(quickLogAtom);
   return useMemo(() => {
     if (isPaused) {
       return "bg-yellow-500";
@@ -30,6 +31,10 @@ export const usePlayBackground = () => {
       return "bg-red-500";
     }
 
+    if (quickLog) {
+      return "bg-purple-500";
+    }
+
     return "bg-blue-500";
-  }, [isPaused, prepPhase, performSetPhase, restPhase]);
+  }, [isPaused, prepPhase, performSetPhase, restPhase, quickLog]);
 };

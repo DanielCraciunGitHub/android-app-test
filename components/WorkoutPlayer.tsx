@@ -4,6 +4,7 @@ import {
   currentSetIndexAtom,
   performSetPhaseAtom,
   prepPhaseAtom,
+  quickLogAtom,
   restPhaseAtom,
 } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
@@ -36,6 +37,7 @@ export default function WorkoutPlayer({
     performSetPhaseAtom
   );
   const [restPhase, setRestPhase] = useAtom(restPhaseAtom);
+  const [quickLog, setQuickLog] = useAtom(quickLogAtom);
 
   const currentExercise = exercises[currentExerciseIndex];
 
@@ -47,12 +49,14 @@ export default function WorkoutPlayer({
     setRestPhase(false);
     setCurrentSetIndex(0);
     setCurrentExerciseIndex(0);
+    setQuickLog(false);
   }, [
     setPrepPhase,
     setPerformSetPhase,
     setRestPhase,
     setCurrentSetIndex,
     setCurrentExerciseIndex,
+    setQuickLog,
   ]);
 
   return (
@@ -87,7 +91,14 @@ export default function WorkoutPlayer({
             <TouchableOpacity
               onPress={() => {
                 setPerformSetPhase(false);
-                setRestPhase(true);
+                if (
+                  currentSetIndex <
+                  Number(currentExercise.targetSets) - 1
+                ) {
+                  setRestPhase(true);
+                } else {
+                  setQuickLog(true);
+                }
               }}
             >
               <Ionicons name={"play-forward"} size={100} color="white" />
@@ -106,20 +117,29 @@ export default function WorkoutPlayer({
               onComplete={() => {
                 setRestPhase(false);
                 setCurrentSetIndex(currentSetIndex + 1);
-                if (
-                  currentSetIndex <
-                  Number(currentExercise.targetSets) - 1
-                ) {
-                  setPerformSetPhase(true);
-                } else {
-                  setCurrentExerciseIndex(currentExerciseIndex + 1);
-                  setCurrentSetIndex(0);
-                  setPrepPhase(true);
-                  setRestPhase(false);
-                  setPerformSetPhase(false);
-                }
+                setPerformSetPhase(true);
               }}
             />
+          </View>
+        )}
+
+        {quickLog && (
+          <View className="flex-1 items-center justify-center">
+            <Text className="text-center text-7xl font-bold text-white">
+              Quick Log
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setQuickLog(false);
+                setCurrentExerciseIndex(currentExerciseIndex + 1);
+                setCurrentSetIndex(0);
+                setPrepPhase(true);
+                setRestPhase(false);
+                setPerformSetPhase(false);
+              }}
+            >
+              <Ionicons name={"play-forward"} size={100} color="white" />
+            </TouchableOpacity>
           </View>
         )}
       </SafeAreaView>

@@ -6,3 +6,4 @@ export const restPhaseAtom = atom(false);
 export const isPausedAtom = atom(false);
 export const currentExerciseIndexAtom = atom(0);
 export const currentSetIndexAtom = atom(0);
+export const quickLogAtom = atom(false);
