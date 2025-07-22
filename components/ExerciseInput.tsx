@@ -98,10 +98,10 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
   const handleSubmit = () => {
     onSubmit({
       ...details,
-      id: uuid.v4() as string,
+      id:
+        initialValues.id === "" ? (uuid.v4() as string) : initialValues.id,
     });
     setDetails(defaultValues);
-    setCurrentStep(0); // Reset to first step
   };
 
   const handleNext = () => {

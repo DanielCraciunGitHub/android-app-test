@@ -1,4 +1,6 @@
 import React from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { Link } from "expo-router";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 import { ExerciseDetails } from "./ExerciseInput";
@@ -66,12 +68,19 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
           )}
         </View>
 
-        <TouchableOpacity
-          className="rounded-md bg-red-500 px-3 py-1"
-          onPress={handleDelete}
-        >
-          <Text className="text-sm font-medium text-white">Delete</Text>
-        </TouchableOpacity>
+        <View className="flex-row gap-2">
+          <Link href={`/exercises/add-exercise?id=${exercise.id}`} asChild>
+            <TouchableOpacity className="rounded-md bg-gray-500 px-3 py-1">
+              <Text className="text-sm font-medium text-white">Edit</Text>
+            </TouchableOpacity>
+          </Link>
+          <TouchableOpacity
+            className="rounded-md bg-red-500 px-3 py-1"
+            onPress={handleDelete}
+          >
+            <Ionicons name="trash-outline" size={16} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Exercise Details */}
