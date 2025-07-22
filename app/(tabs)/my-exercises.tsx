@@ -34,7 +34,7 @@ export default function MyExercises() {
 
   const handleSelectExercise = async (exercise: ExerciseDetails) => {
     const updatedExercises = exercises.map((e) =>
-      e.name === exercise.name ? { ...e, selected: !e.selected } : e
+      e.id === exercise.id ? { ...e, selected: !e.selected } : e
     );
     setExercises(updatedExercises);
     await setItem(StorageKey.EXERCISES, updatedExercises);
@@ -43,7 +43,7 @@ export default function MyExercises() {
   const handleDeleteExercise = async (exercise: ExerciseDetails) => {
     try {
       const updatedExercises = exercises.filter(
-        (e) => e.name !== exercise.name
+        (e) => e.id !== exercise.id
       );
       await setItem(StorageKey.EXERCISES, updatedExercises);
       setExercises(updatedExercises);
@@ -90,9 +90,9 @@ export default function MyExercises() {
       </View>
 
       <ScrollView className="flex-1 px-4 py-4">
-        {exercises.map((exercise, index) => (
+        {exercises.map((exercise) => (
           <ExerciseCard
-            key={index}
+            key={exercise.id}
             exercise={exercise}
             isSelected={exercise.selected}
             onSelect={handleSelectExercise}

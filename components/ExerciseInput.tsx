@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import uuid from "react-native-uuid";
 
 export interface ExerciseDetails {
+  id: string;
   name: string;
   targetSets: string;
   targetReps: string;
@@ -15,6 +17,7 @@ interface ExerciseInputProps {
 }
 
 const defaultValues: ExerciseDetails = {
+  id: "",
   name: "",
   targetSets: "",
   targetReps: "",
@@ -29,7 +32,10 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
   const [details, setDetails] = useState<ExerciseDetails>(initialValues);
 
   const handleSubmit = () => {
-    onSubmit(details);
+    onSubmit({
+      ...details,
+      id: uuid.v4() as string,
+    });
     setDetails(defaultValues);
   };
 
