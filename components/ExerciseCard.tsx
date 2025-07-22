@@ -1,0 +1,103 @@
+import React from "react";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+
+import { ExerciseDetails } from "./ExerciseInput";
+
+interface ExerciseCardProps {
+  exercise: ExerciseDetails;
+  isSelected: boolean;
+  onSelect: (exercise: ExerciseDetails) => void;
+  onDelete: (exercise: ExerciseDetails) => void;
+}
+
+export const ExerciseCard: React.FC<ExerciseCardProps> = ({
+  exercise,
+  isSelected,
+  onSelect,
+  onDelete,
+}) => {
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Exercise",
+      "Are you sure you want to delete this exercise?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => onDelete(exercise),
+        },
+      ]
+    );
+  };
+
+  return (
+    <TouchableOpacity
+      className={`mb-3 rounded-lg border-2 p-4 shadow-sm ${
+        isSelected
+          ? "border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-900/20"
+          : "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
+      }`}
+      onPress={() => onSelect(exercise)}
+    >
+      {/* Header with selection indicator and delete button */}
+      <View className="mb-3 flex-row items-center justify-between">
+        <View className="flex-row items-center">
+          <View
+            className={`mr-3 h-4 w-4 rounded-full border-2 ${
+              isSelected
+                ? "border-blue-500 bg-blue-500"
+                : "border-gray-300 dark:border-gray-600"
+            }`}
+          >
+            {isSelected && (
+              <View className="h-full w-full rounded-full bg-white" />
+            )}
+          </View>
+          <Text className="text-lg font-semibold text-gray-800 dark:text-white">
+            {exercise.name}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          className="rounded-md bg-red-500 px-3 py-1"
+          onPress={handleDelete}
+        >
+          <Text className="text-sm font-medium text-white">Delete</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Exercise Details */}
+      <View className="space-y-2">
+        <View className="flex-row justify-between">
+          <Text className="font-medium text-gray-600 dark:text-gray-300">
+            Target Sets:
+          </Text>
+          <Text className="text-gray-800 dark:text-white">
+            {exercise.targetSets || "Not set"}
+          </Text>
+        </View>
+
+        <View className="flex-row justify-between">
+          <Text className="font-medium text-gray-600 dark:text-gray-300">
+            Target Reps:
+          </Text>
+          <Text className="text-gray-800 dark:text-white">
+            {exercise.targetReps || "Not set"}
+          </Text>
+        </View>
+
+        <View className="flex-row justify-between">
+          <Text className="font-medium text-gray-600 dark:text-gray-300">
+            Rest Time:
+          </Text>
+          <Text className="text-gray-800 dark:text-white">
+            {exercise.targetRestTime
+              ? `${exercise.targetRestTime}s`
+              : "Not set"}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};

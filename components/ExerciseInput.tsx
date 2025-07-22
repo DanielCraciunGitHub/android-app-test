@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export interface ExerciseDetails {
+  name: string;
   targetSets: string;
   targetReps: string;
   targetRestTime: string;
+  selected: boolean;
 }
 
 interface ExerciseInputProps {
@@ -13,9 +15,11 @@ interface ExerciseInputProps {
 }
 
 const defaultValues: ExerciseDetails = {
+  name: "",
   targetSets: "",
   targetReps: "",
   targetRestTime: "",
+  selected: false,
 };
 
 export const ExerciseInput: React.FC<ExerciseInputProps> = ({
@@ -34,6 +38,21 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       <Text className="mb-4 text-xl font-bold text-gray-800 dark:text-white">
         Exercise Details
       </Text>
+
+      {/* Name Input */}
+      <View className="mb-4">
+        <Text className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+          Name
+        </Text>
+        <TextInput
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
+          value={details.name}
+          onChangeText={(text: string) =>
+            setDetails({ ...details, name: text })
+          }
+          placeholder="Enter exercise name"
+        />
+      </View>
 
       {/* Target Sets Input */}
       <View className="mb-4">
