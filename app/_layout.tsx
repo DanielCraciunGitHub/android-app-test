@@ -1,20 +1,13 @@
-import { useEffect, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { useEffect } from "react";
 import { useFonts } from "expo-font";
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useColorScheme } from "nativewind";
-import { Pressable } from "react-native";
 
 import "../global.css";
-
-import Sidebar from "../components/Sidebar";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
-  const { colorScheme } = useColorScheme();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -30,90 +23,8 @@ export default function Layout() {
   }
 
   return (
-    <>
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-      />
-      <Tabs
-        screenOptions={{
-          headerTitle: "",
-          tabBarStyle: {
-            backgroundColor:
-              colorScheme === "dark" ? "#000000" : "#FFFFFF",
-            borderTopWidth: 1,
-            borderTopColor: colorScheme === "dark" ? "#1F2937" : "#E5E5E5",
-            paddingBottom: 8,
-            paddingTop: 8,
-            height: 60,
-          },
-          tabBarActiveTintColor:
-            colorScheme === "dark" ? "#FFFFFF" : "#023c69",
-          tabBarInactiveTintColor:
-            colorScheme === "dark" ? "#9CA3AF" : "#6B7280",
-          headerShown: true,
-          headerStyle: {
-            backgroundColor:
-              colorScheme === "dark" ? "#000000" : "#FFFFFF",
-          },
-          headerTintColor: colorScheme === "dark" ? "#FFFFFF" : "#023c69",
-          headerLeft: () => (
-            <Pressable onPress={() => setIsSidebarOpen(true)}>
-              <Ionicons
-                name="menu-outline"
-                size={24}
-                color={colorScheme === "dark" ? "#FFFFFF" : "#023c69"}
-                style={{ marginLeft: 16 }}
-              />
-            </Pressable>
-          ),
-        }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Timeline",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="time-outline" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="create-workout"
-          options={{
-            title: "Workouts",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="barbell-outline" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="reminders"
-          options={{
-            title: "Reminders",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons
-                name="calendar-outline"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="settings"
-          options={{
-            title: "Settings",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons
-                name="settings-outline"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-      </Tabs>
-    </>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
   );
 }

@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export enum StorageKey {
   REMINDERS = "@reminders",
   SETTINGS = "@settings",
+  EXERCISES = "@exercises",
 }
 
 export async function setItem<T>(
