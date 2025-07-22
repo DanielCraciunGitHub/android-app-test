@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
@@ -9,30 +8,18 @@ import {
   ISettings,
 } from "@/config/settings";
 import { getItem, StorageKey } from "@/lib/local-storage";
-import { CountdownTimer } from "@/components/CountdownTimer";
+import { usePlayBackground } from "@/hooks/play-background";
 import { ExerciseDetails } from "@/components/ExerciseInput";
+import WorkoutPlayer from "@/components/WorkoutPlayer";
+import WorkoutProgress from "@/components/WorkoutProgress";
 
 export default function Play() {
-  const [isPaused, setIsPaused] = useState(false);
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const currentExercise = exercises[currentExerciseIndex];
+
   const [settings, setSettings] = useState<ISettings>({
     workoutReminderTime: DEFAULT_WORKOUT_REMINDER_TIME,
     prepTime: DEFAULT_PREP_TIME,
   });
-  const [prepPhase, setPrepPhase] = useState(false);
-  const [performSetPhase, setPerformSetPhase] = useState(false);
-  const [restPhase, setRestPhase] = useState(false);
-
-  const nextExercise = () => {
-    if (currentExerciseIndex < exercises.length - 1) {
-      setCurrentExerciseIndex(currentExerciseIndex + 1);
-    } else {
-      // TODO: Redirect to end screen
-      setCurrentExerciseIndex(0);
-    }
-  };
 
   useEffect(() => {
     const loadExercises = async () => {
@@ -54,22 +41,17 @@ export default function Play() {
     loadSettings();
   }, []);
 
-  console.log(settings);
+  const backgroundColor = usePlayBackground();
 
   return (
-    currentExercise && (
-      <SafeAreaView className="flex-1 bg-yellow-500">
-        <Text className="mt-4 text-center text-5xl font-bold text-white">
-          {currentExercise.name}
-        </Text>
-        {prepPhase && (
-          <CountdownTimer
-            durationSeconds={settings.prepTime}
-            isPaused={isPaused}
-            setIsPaused={setIsPaused}
-          />
-        )}
-      </SafeAreaView>
-    )
+    <SafeAreaView className={`flex-1 ${backgroundColor}`}>
+      {exercises.length > 0 && (
+        <WorkoutProgress
+          totalExercises={exercises.length}
+          exerciseNames={exercises.map((exercise) => exercise.name)}
+        />
+      )}
+      <WorkoutPlayer exercises={exercises} settings={settings} />
+    </SafeAreaView>
   );
 }

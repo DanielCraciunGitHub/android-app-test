@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
+import { isPausedAtom } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
+import { useAtom } from "jotai";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface CountdownTimerProps {
   durationSeconds: number;
-  isPaused: boolean;
-  setIsPaused: (isPaused: boolean) => void;
+  onComplete: () => void;
 }
 
 export const CountdownTimer = ({
   durationSeconds,
-  isPaused,
-  setIsPaused,
+  onComplete,
 }: CountdownTimerProps) => {
   const [timeLeft, setTimeLeft] = useState(durationSeconds);
+  const [isPaused, setIsPaused] = useAtom(isPausedAtom);
 
   useEffect(() => {
     if (!isPaused) {
@@ -21,20 +22,38 @@ export const CountdownTimer = ({
         setTimeLeft(timeLeft - 1);
       }, 1000);
 
+      if (timeLeft === 0) {
+        onComplete();
+      }
+
       return () => clearInterval(interval);
     }
-  }, [timeLeft, isPaused]);
+  }, [timeLeft, isPaused, onComplete]);
 
   return (
-    <View className="flex-1 items-center justify-center">
+    <View className="items-center justify-center">
       <Text className="text-9xl font-bold text-white">{timeLeft}</Text>
-      <TouchableOpacity onPress={() => setIsPaused(!isPaused)}>
-        <Ionicons
-          name={isPaused ? "play-circle" : "pause-circle"}
-          size={100}
-          color="white"
-        />
-      </TouchableOpacity>
+      <View className="flex-row gap-4">
+        <TouchableOpacity onPress={() => setIsPaused(!isPaused)}>
+          <Ionicons
+            name={isPaused ? "play-circle" : "pause-circle"}
+            size={100}
+            color="white"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setTimeLeft(0);
+            setIsPaused(false);
+          }}
+        >
+          <Ionicons
+            name="play-skip-forward-circle"
+            size={100}
+            color="white"
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
