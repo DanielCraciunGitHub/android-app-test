@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   currentExerciseIndexAtom,
   currentSetIndexAtom,
+  exercisesDataAtom,
   performSetPhaseAtom,
   prepPhaseAtom,
   quickLogAtom,
@@ -9,7 +10,7 @@ import {
 } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
 import { useAtom } from "jotai";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ISettings } from "@/config/settings";
@@ -17,6 +18,8 @@ import { usePlayBackground } from "@/hooks/play-background";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { ExerciseDetails } from "@/components/ExerciseInput";
 import ExerciseProgress from "@/components/ExerciseProgress";
+
+import { StarRating } from "./StarRating";
 
 export default function WorkoutPlayer({
   exercises,
@@ -31,6 +34,7 @@ export default function WorkoutPlayer({
   const [currentExerciseIndex, setCurrentExerciseIndex] = useAtom(
     currentExerciseIndexAtom
   );
+  const [exercisesData, setExercisesData] = useAtom(exercisesDataAtom);
 
   const [prepPhase, setPrepPhase] = useAtom(prepPhaseAtom);
   const [performSetPhase, setPerformSetPhase] = useAtom(
@@ -38,6 +42,9 @@ export default function WorkoutPlayer({
   );
   const [restPhase, setRestPhase] = useAtom(restPhaseAtom);
   const [quickLog, setQuickLog] = useAtom(quickLogAtom);
+
+  const [actualReps, setActualReps] = useState<string[]>([]);
+  const [exerciseRating, setExerciseRating] = useState<number>(0);
 
   const currentExercise = exercises[currentExerciseIndex];
 
@@ -59,13 +66,62 @@ export default function WorkoutPlayer({
     setQuickLog,
   ]);
 
+  useEffect(() => {
+    if (quickLog && currentExercise) {
+      const repsArray = Array.from({
+        length: Number(currentExercise.targetSets),
+      }).map(() => currentExercise.targetReps);
+      setActualReps(repsArray);
+      setExerciseRating(0);
+    }
+  }, [quickLog, currentExercise]);
+
+  const updateActualReps = (setIndex: number, reps: string) => {
+    const newReps = [...actualReps];
+    newReps[setIndex] = reps;
+    setActualReps(newReps);
+  };
+
+  const handleNextExercise = () => {
+    const newExerciseData = {
+      set: actualReps.map((reps) => ({
+        targetReps: Number(currentExercise.targetReps),
+        actualReps: Number(reps) || 0,
+      })),
+      restTime: Number(currentExercise.targetRestTime),
+      rating: exerciseRating,
+    };
+
+    const newExercisesData = [...exercisesData];
+    newExercisesData[currentExerciseIndex] = newExerciseData;
+    setExercisesData(newExercisesData);
+
+    if (currentExerciseIndex < exercises.length - 1) {
+      setQuickLog(false);
+      setCurrentExerciseIndex(currentExerciseIndex + 1);
+      setCurrentSetIndex(0);
+      setPrepPhase(true);
+      setRestPhase(false);
+      setPerformSetPhase(false);
+    } else {
+      // TODO: Navigate to a completion screen
+      console.log("Workout completed!", newExercisesData);
+    }
+  };
+
+  const isReadyToProgress =
+    actualReps.every((reps) => reps && Number(reps) >= 0) &&
+    exerciseRating > 0;
+
   return (
     currentExercise && (
       <SafeAreaView className={`flex-1 ${backgroundColor}`}>
-        <ExerciseProgress
-          totalSets={Number(currentExercise.targetSets)}
-          exerciseName={currentExercise.name}
-        />
+        {!quickLog && (
+          <ExerciseProgress
+            totalSets={Number(currentExercise.targetSets)}
+            exerciseName={currentExercise.name}
+          />
+        )}
 
         {prepPhase && (
           <View className="flex-1 items-center justify-center">
@@ -124,21 +180,74 @@ export default function WorkoutPlayer({
         )}
 
         {quickLog && (
-          <View className="flex-1 items-center justify-center">
-            <Text className="text-center text-7xl font-bold text-white">
-              Quick Log
+          <View className="flex-1 px-6 py-4">
+            <Text className="mb-6 text-center text-3xl font-bold text-white">
+              How did you do?
             </Text>
+
+            <Text className="mb-4 text-center text-xl text-gray-300">
+              Target: {currentExercise.targetReps} reps per set
+            </Text>
+
+            <View className="flex-1 justify-center">
+              <Text className="mb-4 text-center text-xl font-bold text-white">
+                Actual Reps:
+              </Text>
+
+              {Array.from({
+                length: Number(currentExercise.targetSets),
+              }).map((_, index) => (
+                <View
+                  key={index}
+                  className="mb-3 flex-row items-center justify-between rounded-lg bg-gray-800 px-4 py-3"
+                >
+                  <Text className="flex-1 text-2xl font-bold text-white">
+                    Set {index + 1}:
+                  </Text>
+                  <TextInput
+                    className="min-w-[80px] rounded-lg bg-gray-700 px-4 py-2 text-center text-2xl font-bold text-white"
+                    placeholder="0"
+                    keyboardType="numeric"
+                    value={actualReps[index] || ""}
+                    onChangeText={(text) => updateActualReps(index, text)}
+                    selectTextOnFocus
+                  />
+                  <Text className="ml-2 text-xl text-gray-300">reps</Text>
+                </View>
+              ))}
+            </View>
+
+            <View className="mb-8 mt-6">
+              <Text className="mb-3 text-center text-xl font-bold text-white">
+                Rate this exercise:
+              </Text>
+              <StarRating
+                rating={exerciseRating}
+                onRatingChange={setExerciseRating}
+              />
+            </View>
+
             <TouchableOpacity
-              onPress={() => {
-                setQuickLog(false);
-                setCurrentExerciseIndex(currentExerciseIndex + 1);
-                setCurrentSetIndex(0);
-                setPrepPhase(true);
-                setRestPhase(false);
-                setPerformSetPhase(false);
-              }}
+              onPress={handleNextExercise}
+              disabled={!isReadyToProgress}
+              className={`flex-row items-center justify-center rounded-lg px-6 py-4 ${
+                isReadyToProgress ? "bg-green-600" : "bg-gray-600"
+              }`}
             >
-              <Ionicons name={"play-forward"} size={100} color="white" />
+              <Text className="mr-3 text-2xl font-bold text-white">
+                {currentExerciseIndex < exercises.length - 1
+                  ? "Next Exercise"
+                  : "Finish Workout"}
+              </Text>
+              <Ionicons
+                name={
+                  currentExerciseIndex < exercises.length - 1
+                    ? "play-forward"
+                    : "checkmark"
+                }
+                size={30}
+                color="white"
+              />
             </TouchableOpacity>
           </View>
         )}
