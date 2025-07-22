@@ -38,6 +38,15 @@ export default function Layout() {
           }}
         />
         <Drawer.Screen
+          name="reminders"
+          options={{
+            drawerLabel: "Reminders",
+            drawerIcon: ({ color, size }) => (
+              <Ionicons name="alarm-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Drawer.Screen
           name="settings"
           options={{
             drawerLabel: "Settings",

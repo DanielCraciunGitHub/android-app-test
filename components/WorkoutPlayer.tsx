@@ -9,6 +9,7 @@ import {
   restPhaseAtom,
 } from "@/atoms/play";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useAtom } from "jotai";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -104,8 +105,8 @@ export default function WorkoutPlayer({
       setRestPhase(false);
       setPerformSetPhase(false);
     } else {
-      // TODO: Navigate to a completion screen
-      console.log("Workout completed!", newExercisesData);
+      router.push("/(sidebar)/(tabs)/workout-sessions");
+      console.log(JSON.stringify(newExercisesData, null, 2));
     }
   };
 

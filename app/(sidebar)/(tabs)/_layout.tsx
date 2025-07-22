@@ -56,9 +56,9 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="reminders"
+        name="workout-sessions"
         options={{
-          title: "Reminders",
+          title: "Sessions",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
           ),
