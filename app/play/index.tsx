@@ -9,7 +9,10 @@ import {
 } from "@/config/settings";
 import { getItem, StorageKey } from "@/lib/local-storage";
 import { usePlayBackground } from "@/hooks/play-background";
-import { ExerciseDetails } from "@/components/ExerciseInput";
+import {
+  ExerciseDetails,
+  sortBySelectionOrder,
+} from "@/components/ExerciseInput";
 import WorkoutPlayer from "@/components/WorkoutPlayer";
 import WorkoutProgress from "@/components/WorkoutProgress";
 
@@ -27,7 +30,11 @@ export default function Play() {
         StorageKey.EXERCISES
       );
       if (exercises) {
-        setExercises(exercises);
+        // Filter and sort selected exercises by selection order
+        const selectedExercises = sortBySelectionOrder(
+          exercises.filter((e) => e.selected)
+        );
+        setExercises(selectedExercises);
       }
     };
     const loadSettings = async () => {

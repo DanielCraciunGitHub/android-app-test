@@ -55,16 +55,6 @@ export default function WorkoutPlayer({
     setCurrentExerciseIndex,
   ]);
 
-  console.log(
-    prepPhase
-      ? "prep"
-      : performSetPhase
-        ? "perform"
-        : restPhase
-          ? "rest"
-          : "play"
-  );
-
   return (
     currentExercise && (
       <SafeAreaView className={`flex-1 ${backgroundColor}`}>

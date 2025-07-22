@@ -57,6 +57,13 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({
           <Text className="text-lg font-semibold text-gray-800 dark:text-white">
             {exercise.name}
           </Text>
+          {isSelected && exercise.selectionOrder && (
+            <View className="ml-2 rounded-full bg-blue-500 px-2 py-1">
+              <Text className="text-xs font-bold text-white">
+                #{exercise.selectionOrder}
+              </Text>
+            </View>
+          )}
         </View>
 
         <TouchableOpacity

@@ -6,7 +6,7 @@ import { ScrollView, Text, View } from "react-native";
 
 import { getItem, StorageKey } from "@/lib/local-storage";
 
-import { ExerciseDetails } from "./ExerciseInput";
+import { ExerciseDetails, sortBySelectionOrder } from "./ExerciseInput";
 
 interface TimelineStepProps {
   title: string;
@@ -213,8 +213,8 @@ export const WorkoutTimeline: React.FC = () => {
       const storedExercises = await getItem<ExerciseDetails[]>(
         StorageKey.EXERCISES
       );
-      const selected = (storedExercises || []).filter(
-        (exercise) => exercise.selected
+      const selected = sortBySelectionOrder(
+        (storedExercises || []).filter((exercise) => exercise.selected)
       );
       setSelectedExercises(selected);
     } catch (error) {

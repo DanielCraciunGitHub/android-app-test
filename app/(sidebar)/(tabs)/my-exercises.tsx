@@ -4,12 +4,17 @@ import { Alert, ScrollView, Text, View } from "react-native";
 
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
-import { ExerciseDetails } from "@/components/ExerciseInput";
+import {
+  ExerciseDetails,
+  sortBySelectionOrder,
+} from "@/components/ExerciseInput";
 
 export default function MyExercises() {
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const selectedExercises = exercises.filter((e) => e.selected);
+  const selectedExercises = sortBySelectionOrder(
+    exercises.filter((e) => e.selected)
+  );
 
   const loadExercises = async () => {
     try {
@@ -33,9 +38,43 @@ export default function MyExercises() {
   );
 
   const handleSelectExercise = async (exercise: ExerciseDetails) => {
-    const updatedExercises = exercises.map((e) =>
-      e.id === exercise.id ? { ...e, selected: !e.selected } : e
-    );
+    const updatedExercises = exercises.map((e) => {
+      if (e.id === exercise.id) {
+        if (!e.selected) {
+          // Selecting exercise - assign next order number
+          const maxOrder = Math.max(
+            0,
+            ...exercises
+              .filter(
+                (ex) => ex.selected && ex.selectionOrder !== undefined
+              )
+              .map((ex) => ex.selectionOrder!)
+          );
+          return { ...e, selected: true, selectionOrder: maxOrder + 1 };
+        } else {
+          // Deselecting exercise - remove order and adjust others
+          const removedOrder = e.selectionOrder;
+          const updated = {
+            ...e,
+            selected: false,
+            selectionOrder: undefined,
+          };
+          return updated;
+        }
+      }
+      // Adjust order numbers for other exercises when one is deselected
+      if (
+        exercise.selected &&
+        e.selected &&
+        e.selectionOrder !== undefined &&
+        exercise.selectionOrder !== undefined &&
+        e.selectionOrder > exercise.selectionOrder
+      ) {
+        return { ...e, selectionOrder: e.selectionOrder - 1 };
+      }
+      return e;
+    });
+
     setExercises(updatedExercises);
     await setItem(StorageKey.EXERCISES, updatedExercises);
   };

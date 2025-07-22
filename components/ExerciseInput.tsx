@@ -9,7 +9,22 @@ export interface ExerciseDetails {
   targetReps: string;
   targetRestTime: string;
   selected: boolean;
+  selectionOrder?: number; // Track the order in which exercises were selected
 }
+
+// Utility function to sort exercises by selection order
+export const sortBySelectionOrder = (
+  exercises: ExerciseDetails[]
+): ExerciseDetails[] => {
+  return exercises.sort((a, b) => {
+    // Sort by selection order, with undefined/null values at the end
+    if (a.selectionOrder === undefined && b.selectionOrder === undefined)
+      return 0;
+    if (a.selectionOrder === undefined) return 1;
+    if (b.selectionOrder === undefined) return -1;
+    return a.selectionOrder - b.selectionOrder;
+  });
+};
 
 interface ExerciseInputProps {
   onSubmit: (details: ExerciseDetails) => void;
@@ -23,6 +38,7 @@ const defaultValues: ExerciseDetails = {
   targetReps: "",
   targetRestTime: "",
   selected: false,
+  selectionOrder: undefined,
 };
 
 export const ExerciseInput: React.FC<ExerciseInputProps> = ({
