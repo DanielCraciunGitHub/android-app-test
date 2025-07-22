@@ -52,9 +52,9 @@ export default function Layout() {
         <Drawer.Screen
           name="(tabs)"
           options={{
-            title: "Timeline",
+            title: "Home",
             drawerIcon: ({ color, size }) => (
-              <Ionicons name="time-outline" size={size} color={color} />
+              <Ionicons name="home-outline" size={size} color={color} />
             ),
           }}
         />

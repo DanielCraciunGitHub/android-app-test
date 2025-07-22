@@ -1,11 +1,5 @@
-import { Text, View } from "react-native";
+import { WorkoutTimeline } from "@/components/WorkoutTimeline";
 
 export default function Timeline() {
-  return (
-    <View className="flex-1 items-center justify-center gap-4 dark:bg-black">
-      <Text className="text-xl font-bold text-white">
-        Welcome to GymTime!
-      </Text>
-    </View>
-  );
+  return <WorkoutTimeline />;
 }

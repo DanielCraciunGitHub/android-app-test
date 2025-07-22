@@ -30,6 +30,34 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
   initialValues = defaultValues,
 }) => {
   const [details, setDetails] = useState<ExerciseDetails>(initialValues);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const steps = [
+    {
+      label: "Exercise Name",
+      placeholder: "Enter exercise name",
+      keyboardType: "default" as const,
+      field: "name" as keyof ExerciseDetails,
+    },
+    {
+      label: "Target Sets (adaptable)",
+      placeholder: "Enter number of sets",
+      keyboardType: "numeric" as const,
+      field: "targetSets" as keyof ExerciseDetails,
+    },
+    {
+      label: "Target Reps (fixed)",
+      placeholder: "Enter number of reps",
+      keyboardType: "numeric" as const,
+      field: "targetReps" as keyof ExerciseDetails,
+    },
+    {
+      label: "Target Rest Time (adaptable)",
+      placeholder: "Enter rest time in seconds",
+      keyboardType: "numeric" as const,
+      field: "targetRestTime" as keyof ExerciseDetails,
+    },
+  ];
 
   const handleSubmit = () => {
     onSubmit({
@@ -37,86 +65,110 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
       id: uuid.v4() as string,
     });
     setDetails(defaultValues);
+    setCurrentStep(0); // Reset to first step
   };
 
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleInputChange = (text: string) => {
+    const field = steps[currentStep].field;
+    setDetails({ ...details, [field]: text });
+  };
+
+  const currentStepData = steps[currentStep];
+  const currentValue = details[currentStepData.field] as string;
+
   return (
-    <View className="rounded-lg bg-white p-4 shadow-md dark:bg-black dark:text-white">
-      <Text className="mb-4 text-xl font-bold text-gray-800 dark:text-white">
-        Exercise Details
-      </Text>
+    <View className="w-full flex-1 bg-white dark:bg-black">
+      {/* Fixed Header with Progress Bar */}
+      <View className="bg-white px-4 pb-2 pt-4 shadow-sm dark:bg-black">
+        <View className="mb-4">
+          <Text className="mb-2 text-center text-sm text-gray-600 dark:text-gray-400">
+            Step {currentStep + 1} of {steps.length}
+          </Text>
+          <View className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+            <View
+              className="h-2 rounded-full bg-blue-500"
+              style={{
+                width: `${((currentStep + 1) / steps.length) * 100}%`,
+              }}
+            />
+          </View>
+        </View>
 
-      {/* Name Input */}
-      <View className="mb-4">
-        <Text className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Name
-        </Text>
-        <TextInput
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-          value={details.name}
-          onChangeText={(text: string) =>
-            setDetails({ ...details, name: text })
-          }
-          placeholder="Enter exercise name"
-        />
+        {/* Navigation Buttons at Top */}
+        <View className="mb-4 flex-row justify-between">
+          {/* Previous Button */}
+          <TouchableOpacity
+            className={`mr-2 flex-1 rounded-md py-3 ${
+              currentStep === 0
+                ? "bg-gray-300 dark:bg-gray-600"
+                : "bg-gray-500 dark:bg-gray-500"
+            }`}
+            onPress={handlePrevious}
+            disabled={currentStep === 0}
+          >
+            <Text
+              className={`text-center font-semibold ${
+                currentStep === 0
+                  ? "text-gray-500 dark:text-gray-400"
+                  : "text-white"
+              }`}
+            >
+              Previous
+            </Text>
+          </TouchableOpacity>
+
+          {/* Next/Save Button */}
+          {currentStep < steps.length - 1 ? (
+            <TouchableOpacity
+              className="ml-2 flex-1 rounded-md bg-blue-500 py-3 dark:bg-blue-500"
+              onPress={handleNext}
+            >
+              <Text className="text-center font-semibold text-white">
+                Next
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              className="ml-2 flex-1 rounded-md bg-green-500 py-3 dark:bg-green-500"
+              onPress={handleSubmit}
+            >
+              <Text className="text-center font-semibold text-white">
+                Save Exercise
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
-      {/* Target Sets Input */}
-      <View className="mb-4">
-        <Text className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Target Sets (adaptable)
-        </Text>
-        <TextInput
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-          value={details.targetSets}
-          onChangeText={(text: string) =>
-            setDetails({ ...details, targetSets: text })
-          }
-          placeholder="Enter number of sets"
-          keyboardType="numeric"
-        />
+      {/* Input Section - Higher up to avoid keyboard */}
+      <View className="flex-1 px-4 pt-8">
+        <View className="mb-6">
+          <Text className="mb-4 text-center text-lg font-medium text-gray-700 dark:text-gray-300">
+            {currentStepData.label}
+          </Text>
+          <TextInput
+            className="h-14 w-full rounded-md border border-gray-300 px-4 text-lg focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+            value={currentValue}
+            onChangeText={handleInputChange}
+            placeholder={currentStepData.placeholder}
+            keyboardType={currentStepData.keyboardType}
+            autoFocus={true}
+            textAlignVertical="center"
+          />
+        </View>
       </View>
-
-      {/* Target Reps Input */}
-      <View className="mb-4">
-        <Text className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Target Reps (fixed)
-        </Text>
-        <TextInput
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-          value={details.targetReps}
-          onChangeText={(text: string) =>
-            setDetails({ ...details, targetReps: text })
-          }
-          placeholder="Enter number of reps"
-          keyboardType="numeric"
-        />
-      </View>
-
-      {/* Target Rest Time Input */}
-      <View className="mb-6">
-        <Text className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
-          Target Rest Time (adaptable)
-        </Text>
-        <TextInput
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 dark:bg-gray-800 dark:text-white"
-          value={details.targetRestTime}
-          onChangeText={(text: string) =>
-            setDetails({ ...details, targetRestTime: text })
-          }
-          placeholder="Enter rest time in seconds"
-          keyboardType="numeric"
-        />
-      </View>
-
-      {/* Submit Button */}
-      <TouchableOpacity
-        className="w-full rounded-md bg-blue-500 py-3 dark:bg-blue-500"
-        onPress={handleSubmit}
-      >
-        <Text className="px-2 text-center font-semibold text-white">
-          Save Exercise
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 };
