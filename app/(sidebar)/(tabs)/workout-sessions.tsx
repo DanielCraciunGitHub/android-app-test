@@ -52,21 +52,13 @@ export default function WorkoutSessions() {
           style: "destructive",
           onPress: async () => {
             try {
-              // Filter out the deleted session
               const updatedSessions = workoutSessions.filter(
                 (s) => s.id !== session.id
               );
 
-              // Save back to storage
               await setItem(StorageKey.WORKOUT_SESSIONS, updatedSessions);
 
-              // Update local state
               setWorkoutSessions(updatedSessions);
-
-              Alert.alert(
-                "Success",
-                "Workout session deleted successfully"
-              );
             } catch (error) {
               console.error("Error deleting workout session:", error);
               Alert.alert("Error", "Failed to delete workout session");

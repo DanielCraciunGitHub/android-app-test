@@ -1,4 +1,5 @@
-import { Alert, View } from "react-native";
+import { router } from "expo-router";
+import { View } from "react-native";
 
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import {
@@ -19,7 +20,7 @@ export default function Workouts() {
       setItem(StorageKey.EXERCISES, [details]);
     }
 
-    Alert.alert("Exercise added", "Exercise added successfully");
+    router.back();
   };
 
   return (

@@ -1,20 +1,15 @@
 import React, { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Link } from "expo-router";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 
 import { getItem, setItem, StorageKey } from "@/lib/local-storage";
 import { ExerciseCard } from "@/components/ExerciseCard";
-import {
-  ExerciseDetails,
-  sortBySelectionOrder,
-} from "@/components/ExerciseInput";
+import { ExerciseDetails } from "@/components/ExerciseInput";
 
 export default function MyExercises() {
   const [exercises, setExercises] = useState<ExerciseDetails[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const selectedExercises = sortBySelectionOrder(
-    exercises.filter((e) => e.selected)
-  );
 
   const loadExercises = async () => {
     try {
@@ -53,7 +48,6 @@ export default function MyExercises() {
           return { ...e, selected: true, selectionOrder: maxOrder + 1 };
         } else {
           // Deselecting exercise - remove order and adjust others
-          const removedOrder = e.selectionOrder;
           const updated = {
             ...e,
             selected: false,
@@ -86,8 +80,6 @@ export default function MyExercises() {
       );
       await setItem(StorageKey.EXERCISES, updatedExercises);
       setExercises(updatedExercises);
-
-      Alert.alert("Success", "Exercise deleted successfully");
     } catch (error) {
       console.error("Error deleting exercise:", error);
       Alert.alert("Error", "Failed to delete exercise");
@@ -123,9 +115,11 @@ export default function MyExercises() {
         <Text className="text-2xl font-bold text-gray-800 dark:text-white">
           My Exercises ({exercises.length})
         </Text>
-        <Text className="text-sm text-gray-600 dark:text-gray-300">
-          {selectedExercises.length} selected
-        </Text>
+        <Link href="/exercises/add-exercise" asChild>
+          <Pressable className="h-8 w-8 items-center justify-center rounded-full bg-blue-500">
+            <Text className="text-xl font-bold text-white">+</Text>
+          </Pressable>
+        </Link>
       </View>
 
       <ScrollView className="flex-1 px-4 py-4">
