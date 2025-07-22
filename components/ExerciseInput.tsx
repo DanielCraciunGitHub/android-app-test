@@ -182,6 +182,17 @@ export const ExerciseInput: React.FC<ExerciseInputProps> = ({
             keyboardType={currentStepData.keyboardType}
             autoFocus={true}
             textAlignVertical="center"
+            onSubmitEditing={() => {
+              if (currentStep === steps.length - 1) {
+                handleSubmit();
+              } else {
+                handleNext();
+              }
+            }}
+            returnKeyType={
+              currentStep === steps.length - 1 ? "done" : "next"
+            }
+            submitBehavior="submit"
           />
         </View>
       </View>
